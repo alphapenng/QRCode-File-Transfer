@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+out/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+
+# Electron
+.electron/
+.cache/
+
+# Development
+.vscode/
+.idea/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Production
+*.production
+
+# Misc
+.cache
+.parcel-cache

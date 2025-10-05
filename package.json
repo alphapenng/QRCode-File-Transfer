@@ -1,0 +1,25 @@
+{
+  "name": "qrcode-app",
+  "version": "1.0.0",
+  "description": "QRCode File Transfer - 二维码文件传输工具",
+  "license": "MIT",
+  "author": "Your Name <your.email@example.com>",
+  "type": "commonjs",
+  "main": "src/main/index.js",
+  "scripts": {
+    "dev": "echo \"Development scripts will be configured in task 1.1.7\"",
+    "build": "echo \"Build scripts will be configured in task 1.1.7\"",
+    "start": "electron .",
+    "test": "echo \"Tests will be configured in task 1.6.1\""
+  },
+  "keywords": [
+    "electron",
+    "qrcode",
+    "file-transfer",
+    "windows7"
+  ],
+  "dependencies": {
+    "electron": "^22.3.27"
+  },
+  "devDependencies": {}
+}
