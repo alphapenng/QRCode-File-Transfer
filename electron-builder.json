@@ -1,0 +1,52 @@
+{
+  "appId": "com.qrcode.filetransfer",
+  "productName": "QRCode File Transfer",
+  "copyright": "Copyright © 2025",
+  "directories": {
+    "output": "dist",
+    "buildResources": "assets"
+  },
+  "files": [
+    "src/**/*",
+    "package.json"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
+      }
+    ],
+    "icon": "assets/icon.ico",
+    "artifactName": "${productName}-Setup-${version}-${arch}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "allowElevation": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "QRCode File Transfer",
+    "installerIcon": "assets/icon.ico",
+    "uninstallerIcon": "assets/icon.ico",
+    "installerHeaderIcon": "assets/icon.ico",
+    "deleteAppDataOnUninstall": false,
+    "perMachine": false,
+    "runAfterFinish": true,
+    "menuCategory": false,
+    "displayLanguageSelector": false,
+    "installerLanguages": [
+      "zh_CN",
+      "en_US"
+    ],
+    "language": "2052"
+  },
+  "extraMetadata": {
+    "main": "src/main/index.js"
+  },
+  "publish": null
+}
+
