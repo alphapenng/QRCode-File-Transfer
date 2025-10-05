@@ -7,8 +7,9 @@
   "type": "commonjs",
   "main": "src/main/index.js",
   "scripts": {
-    "dev": "echo \"Development scripts will be configured in task 1.1.7\"",
-    "build": "echo \"Build scripts will be configured in task 1.1.7\"",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "start": "electron .",
     "test": "echo \"Tests will be configured in task 1.6.1\""
   },
@@ -19,12 +20,18 @@
     "windows7"
   ],
   "dependencies": {
-    "electron": "^22.3.27"
+    "electron": "^22.3.27",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "electron-builder": "^26.0.12",
+    "vite": "^7.1.9",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6",
     "wait-on": "^9.0.1"
   }
 }
