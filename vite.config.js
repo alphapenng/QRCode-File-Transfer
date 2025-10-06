@@ -1,3 +1,12 @@
+/*
+ * @Description: 
+ * @Author: alphapenng
+ * @Github: 
+ * @Date: 2025-10-06 00:20:41
+ * @LastEditors: alphapenng
+ * @LastEditTime: 2025-10-06 12:26:34
+ * @FilePath: \qrcode-app\vite.config.js
+ */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import electron from 'vite-plugin-electron';

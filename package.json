@@ -4,6 +4,7 @@
   "description": "QRCode File Transfer - 二维码文件传输工具",
   "license": "MIT",
   "author": "Your Name <your.email@example.com>",
+  "type": "commonjs",
   "main": "src/main/index.js",
   "scripts": {
     "dev": "vite",
