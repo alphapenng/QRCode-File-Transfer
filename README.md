@@ -44,9 +44,30 @@ npm install
 ```
 
 3. **启动开发环境**
+
+**方式 1: 完整开发环境（推荐）**
+```bash
+npm run dev:electron
+```
+这将启动 Vite 开发服务器和 Electron 应用，支持热重载。
+
+**方式 2: 仅前端开发**
 ```bash
 npm run dev
 ```
+仅启动 Vite 开发服务器，在浏览器中访问 `http://localhost:5173`。
+
+4. **构建应用**
+```bash
+npm run build
+```
+这将构建渲染进程并打包 Electron 应用。
+
+5. **运行测试**
+```bash
+npm test
+```
+运行单元测试和集成测试（将在任务 1.6.1 中配置）。
 
 4. **构建生产版本**
 ```bash

@@ -4,7 +4,7 @@
  * @Github:
  * @Date: 2025-10-06 00:21:49
  * @LastEditors: alphapenng
- * @LastEditTime: 2025-10-06 11:14:05
+ * @LastEditTime: 2025-10-06 11:22:15
  * @FilePath: \qrcode-app\src\preload\index.js
  */
 const { contextBridge, ipcRenderer } = require('electron');

@@ -7,9 +7,16 @@
   "main": "src/main/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "dev:electron": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "build": "vite build && electron-builder",
+    "build:vite": "vite build",
+    "build:electron": "electron-builder",
+    "build:dir": "vite build && electron-builder --dir",
+    "build:win": "vite build && electron-builder --win",
     "preview": "vite preview",
     "start": "electron .",
+    "clean": "rimraf dist out",
+    "lint": "echo \"Linting will be configured later\"",
     "test": "echo \"Tests will be configured in task 1.6.1\""
   },
   "keywords": [
@@ -36,6 +43,7 @@
     "cross-env": "^10.1.0",
     "electron-builder": "^26.0.12",
     "postcss": "^8.5.6",
+    "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.18",
     "vite": "^7.1.9",
     "vite-plugin-electron": "^0.29.0",
