@@ -2,7 +2,7 @@
 
 ## 第一阶段（MVP）进度
 
-**总体进度**: 5/43 任务完成 (11.6%)
+**总体进度**: 6/43 任务完成 (14.0%)
 
 ---
 
@@ -180,25 +180,58 @@
 - ✅ 安全配置符合最佳实践
 - ✅ 错误处理机制完善
 
+### 1.1.6 创建 Preload 脚本 ✅
+**完成时间**: 2025-10-06 09:30
+
+**完成内容**:
+1. ✅ 完善 preload 脚本（src/preload/index.js）
+   - 使用 contextBridge 暴露安全的 API
+   - 实现文件操作 API（select, read, saveDialog, save, info）
+   - 实现传输相关 API（sendProgress, receiveProgress, complete, error, cancel）
+   - 实现传输事件监听（onProgressUpdate, onComplete, onError, onCancelled）
+   - 实现系统相关 API（getVersion, getPath, showItemInFolder, openExternal）
+   - 实现配置管理 API（get, set, getAll, reset, addRecentFile, getRecentFiles, clearRecentFiles）
+2. ✅ 创建 TypeScript 类型定义（src/preload/types.d.ts）
+   - 定义所有 API 的类型
+   - 定义响应数据结构
+   - 定义全局 Window 接口扩展
+3. ✅ 创建 API 使用文档（docs/preload-api-guide.md）
+   - 详细的 API 说明
+   - 使用示例
+   - 安全注意事项
+
+**API 统计**:
+- 文件操作：5 个方法
+- 传输相关：9 个方法（5 个调用 + 4 个事件监听）
+- 系统相关：4 个方法
+- 配置管理：7 个方法
+- 总计：25 个 API
+
+**验证结果**:
+- ✅ 所有 API 都经过 contextBridge 封装
+- ✅ 提供完整的类型定义
+- ✅ 事件监听支持取消订阅
+- ✅ 文档详细完整
+
 ---
 
 ## 🔄 进行中任务
 
-### 1.1.6 创建 Preload 脚本
+### 1.1.7 配置开发脚本
 **状态**: 待开始
-**预计时间**: 30分钟
+**预计时间**: 20分钟
 
 ---
 
 ## 📋 待完成任务
 
-### 1.1 项目初始化和环境配置 (5/7 完成)
+### 1.1 项目初始化和环境配置 (6/7 完成)
 - [x] 1.1.1 创建项目基础结构
 - [x] 1.1.2 安装 Electron 和核心依赖
 - [x] 1.1.3 配置 React 开发环境
 - [x] 1.1.4 集成 shadcn/ui
 - [x] 1.1.5 配置 Electron 主进程
-- [ ] 1.1.6 创建 Preload 脚本
+- [x] 1.1.6 创建 Preload 脚本
 - [ ] 1.1.7 配置开发脚本
 
 ### 1.2 核心工具模块开发 (0/6 完成)
@@ -246,25 +279,24 @@
 ## 📊 统计信息
 
 - **总任务数**: 43
-- **已完成**: 5
+- **已完成**: 6
 - **进行中**: 0
-- **待开始**: 38
-- **完成率**: 11.6%
+- **待开始**: 37
+- **完成率**: 14.0%
 
 ---
 
 ## 🎯 下一步行动
 
-**下一个任务**: 1.1.6 创建 Preload 脚本
+**下一个任务**: 1.1.7 配置开发脚本
 
 **任务内容**:
-1. 完善 preload 脚本
-2. 使用 contextBridge 暴露安全的 API
-3. 实现文件操作 API
-4. 实现传输相关 API
-5. 实现系统相关 API
+1. 配置 package.json 开发脚本
+2. 实现主进程和渲染进程的并发启动
+3. 配置热重载
+4. 添加构建脚本
 
-**预计时间**: 30分钟
+**预计时间**: 20分钟
 
 ---
 
@@ -276,5 +308,5 @@
 
 ---
 
-**最后更新**: 2025-10-06 08:15
+**最后更新**: 2025-10-06 09:30
 

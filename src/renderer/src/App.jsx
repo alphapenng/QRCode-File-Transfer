@@ -4,7 +4,7 @@
  * @Github: 
  * @Date: 2025-10-06 00:21:09
  * @LastEditors: alphapenng
- * @LastEditTime: 2025-10-06 09:07:47
+ * @LastEditTime: 2025-10-06 09:12:41
  * @FilePath: \qrcode-app\src\renderer\src\App.jsx
  */
 import React, { useState } from 'react';
