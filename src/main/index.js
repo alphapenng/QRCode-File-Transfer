@@ -4,7 +4,7 @@
  * @Github:
  * @Date: 2025-10-06 00:21:49
  * @LastEditors: alphapenng
- * @LastEditTime: 2025-10-06 08:00:00
+ * @LastEditTime: 2025-10-06 13:32:38
  * @FilePath: \qrcode-app\src\main\index.js
  */
 const { app, BrowserWindow, ipcMain } = require('electron');
@@ -21,10 +21,20 @@ let mainWindow = null;
  * 创建主窗口
  */
 function createWindow() {
-  // 创建浏览器窗口
-  mainWindow = new BrowserWindow({
+  // 从配置中获取窗口位置和大小
+  const windowConfig = configManager.get('window', {
     width: 1000,
     height: 700,
+    x: undefined,
+    y: undefined
+  });
+
+  // 创建浏览器窗口
+  mainWindow = new BrowserWindow({
+    width: windowConfig.width || 1000,
+    height: windowConfig.height || 700,
+    x: windowConfig.x,
+    y: windowConfig.y,
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
@@ -57,6 +67,19 @@ function createWindow() {
   // 窗口加载完成后显示
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+  });
+
+  // 窗口关闭前保存窗口状态
+  mainWindow.on('close', () => {
+    // 保存窗口位置和大小
+    const bounds = mainWindow.getBounds();
+    configManager.set('window', {
+      width: bounds.width,
+      height: bounds.height,
+      x: bounds.x,
+      y: bounds.y
+    });
+    console.log('Window bounds saved:', bounds);
   });
 
   // 窗口关闭时的处理
@@ -111,8 +134,19 @@ app.on('window-all-closed', () => {
 });
 
 // 应用退出前的清理工作
-app.on('before-quit', () => {
+app.on('before-quit', async (event) => {
   console.log('Application is quitting...');
+
+  // 阻止默认退出行为，等待配置保存完成
+  event.preventDefault();
+
+  try {
+    // 保存配置（同步等待）
+    await configManager.save();
+    console.log('Config saved successfully before quit');
+  } catch (err) {
+    console.error('Error saving config on quit:', err);
+  }
 
   // 注销所有 IPC 处理器
   if (mainWindow) {
@@ -121,10 +155,8 @@ app.on('before-quit', () => {
     unregisterSystemHandlers();
   }
 
-  // 保存配置
-  configManager.save().catch(err => {
-    console.error('Error saving config on quit:', err);
-  });
+  // 配置保存完成后，真正退出应用
+  app.exit(0);
 });
 
 // 处理未捕获的异常

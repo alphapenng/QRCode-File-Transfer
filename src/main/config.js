@@ -19,6 +19,7 @@ class ConfigManager {
       const data = await fs.readFile(this.configPath, 'utf-8');
       this.config = JSON.parse(data);
       console.log('Config loaded:', this.configPath);
+      console.log("Config data:", this.config);
     } catch (error) {
       // 如果配置文件不存在，使用默认配置
       if (error.code === 'ENOENT') {
@@ -38,17 +39,32 @@ class ConfigManager {
    */
   async save() {
     try {
+      // 确保配置对象存在且有效
+      if (!this.config || typeof this.config !== 'object' || Object.keys(this.config).length === 0) {
+        console.warn('Config is empty or invalid, skipping save');
+        return;
+      }
+
       // 确保目录存在
       const dir = path.dirname(this.configPath);
       await fs.mkdir(dir, { recursive: true });
 
       // 写入配置文件
+      const configData = JSON.stringify(this.config, null, 2);
+
+      // 验证 JSON 数据不为空
+      if (!configData || configData === '{}' || configData === 'null') {
+        console.error('Config data is empty, aborting save');
+        return;
+      }
+
       await fs.writeFile(
         this.configPath,
-        JSON.stringify(this.config, null, 2),
+        configData,
         'utf-8'
       );
-      console.log('Config saved:', this.configPath);
+      console.log('Config saved successfully:', this.configPath);
+      console.log('Config data length:', configData.length);
     } catch (error) {
       console.error('Error saving config:', error);
       throw error;
