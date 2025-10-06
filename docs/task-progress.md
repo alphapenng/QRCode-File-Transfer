@@ -2,7 +2,7 @@
 
 ## 第一阶段（MVP）进度
 
-**总体进度**: 4/43 任务完成 (9.3%)
+**总体进度**: 5/43 任务完成 (11.6%)
 
 ---
 
@@ -142,24 +142,62 @@
 - ✅ shadcn/ui 组件工作正常
 - ✅ 主题系统配置完成
 
+### 1.1.5 配置 Electron 主进程 ✅
+**完成时间**: 2025-10-06 08:15
+
+**完成内容**:
+1. ✅ 完善主进程代码（src/main/index.js）
+   - 增强安全配置（webSecurity, allowRunningInsecureContent）
+   - 添加窗口标题和图标配置
+   - 实现单实例锁定（防止多开）
+   - 添加配置加载和保存
+   - 完善错误处理（uncaughtException, unhandledRejection）
+   - 监听渲染进程错误（crashed, unresponsive, responsive）
+2. ✅ 创建 IPC 处理器
+   - fileHandlers.js - 文件操作（选择、读取、保存、信息）
+   - transferHandlers.js - 传输相关（进度、完成、错误、取消）
+   - systemHandlers.js - 系统相关（版本、路径、配置管理）
+3. ✅ 创建配置管理器（src/main/config.js）
+   - 配置文件加载和保存
+   - 默认配置定义
+   - 配置项读写接口
+   - 最近使用文件管理
+4. ✅ 创建窗口管理器（src/main/windowManager.js）
+   - 窗口创建和管理
+   - 窗口操作接口（聚焦、最小化、最大化）
+   - 防止窗口重复创建
+5. ✅ 创建架构文档（docs/main-process-architecture.md）
+
+**IPC 通道列表**:
+- 文件操作：file:select, file:read, file:save-dialog, file:save, file:info
+- 传输相关：transfer:send-progress, transfer:receive-progress, transfer:complete, transfer:error, transfer:cancel
+- 系统相关：system:get-version, system:get-path, system:show-item-in-folder, system:open-external
+- 配置管理：config:get, config:set, config:get-all, config:reset, config:add-recent-file, config:get-recent-files, config:clear-recent-files
+
+**验证结果**:
+- ✅ 主进程代码结构清晰
+- ✅ IPC 处理器功能完整
+- ✅ 安全配置符合最佳实践
+- ✅ 错误处理机制完善
+
 ---
 
 ## 🔄 进行中任务
 
-### 1.1.5 配置 Electron 主进程
+### 1.1.6 创建 Preload 脚本
 **状态**: 待开始
-**预计时间**: 40分钟
+**预计时间**: 30分钟
 
 ---
 
 ## 📋 待完成任务
 
-### 1.1 项目初始化和环境配置 (4/7 完成)
+### 1.1 项目初始化和环境配置 (5/7 完成)
 - [x] 1.1.1 创建项目基础结构
 - [x] 1.1.2 安装 Electron 和核心依赖
 - [x] 1.1.3 配置 React 开发环境
 - [x] 1.1.4 集成 shadcn/ui
-- [ ] 1.1.5 配置 Electron 主进程
+- [x] 1.1.5 配置 Electron 主进程
 - [ ] 1.1.6 创建 Preload 脚本
 - [ ] 1.1.7 配置开发脚本
 
@@ -208,24 +246,25 @@
 ## 📊 统计信息
 
 - **总任务数**: 43
-- **已完成**: 4
+- **已完成**: 5
 - **进行中**: 0
-- **待开始**: 39
-- **完成率**: 9.3%
+- **待开始**: 38
+- **完成率**: 11.6%
 
 ---
 
 ## 🎯 下一步行动
 
-**下一个任务**: 1.1.5 配置 Electron 主进程
+**下一个任务**: 1.1.6 创建 Preload 脚本
 
 **任务内容**:
-1. 完善主进程代码
-2. 实现 IPC 处理器
-3. 添加文件操作功能
-4. 配置窗口管理
+1. 完善 preload 脚本
+2. 使用 contextBridge 暴露安全的 API
+3. 实现文件操作 API
+4. 实现传输相关 API
+5. 实现系统相关 API
 
-**预计时间**: 40分钟
+**预计时间**: 30分钟
 
 ---
 
@@ -237,5 +276,5 @@
 
 ---
 
-**最后更新**: 2025-10-06 07:52
+**最后更新**: 2025-10-06 08:15
 

@@ -4,7 +4,7 @@
  * @Github: 
  * @Date: 2025-10-06 00:21:09
  * @LastEditors: alphapenng
- * @LastEditTime: 2025-10-06 00:36:28
+ * @LastEditTime: 2025-10-06 09:07:47
  * @FilePath: \qrcode-app\src\renderer\src\App.jsx
  */
 import React, { useState } from 'react';
@@ -17,17 +17,17 @@ function App() {
   const [progress, setProgress] = useState(0);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* 头部 */}
       <header className="bg-gradient-to-r from-[#4ba293ff] to-[#084b45ff] text-white p-6 shadow-lg">
         <div className="container mx-auto">
           <h1 className="text-3xl font-bold">码上传报</h1>
-          <p className="text-sm opacity-90 mt-1">QRCode File Transfer v1.0.0</p>
+          <p className="mt-1 text-sm opacity-90">版本号 v1.0.0</p>
         </div>
       </header>
 
       {/* 主内容 */}
-      <main className="flex-1 container mx-auto p-6">
+      <main className="container flex-1 p-6 mx-auto">
         <Tabs defaultValue="sender" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="sender">发送文件</TabsTrigger>
@@ -44,8 +44,8 @@ function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-lg">
-                  <p className="text-muted-foreground mb-4">
+                <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg border-border">
+                  <p className="mb-4 text-muted-foreground">
                     文件发送功能将在后续任务中实现
                   </p>
                   <Button>选择文件</Button>
@@ -72,8 +72,8 @@ function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-border rounded-lg">
-                  <p className="text-muted-foreground mb-4">
+                <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg border-border">
+                  <p className="mb-4 text-muted-foreground">
                     文件接收功能将在后续任务中实现
                   </p>
                   <Button variant="outline">开始接收</Button>
@@ -93,8 +93,8 @@ function App() {
       </main>
 
       {/* 底部状态栏 */}
-      <footer className="border-t bg-muted/50 p-4">
-        <div className="container mx-auto flex justify-between items-center text-sm text-muted-foreground">
+      <footer className="p-4 border-t bg-muted/50">
+        <div className="container flex items-center justify-between mx-auto text-sm text-muted-foreground">
           <span>状态: 就绪</span>
           <span>Electron {window.electronAPI?.versions?.electron || 'N/A'}</span>
         </div>

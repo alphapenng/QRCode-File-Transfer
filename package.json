@@ -4,7 +4,6 @@
   "description": "QRCode File Transfer - 二维码文件传输工具",
   "license": "MIT",
   "author": "Your Name <your.email@example.com>",
-  "type": "commonjs",
   "main": "src/main/index.js",
   "scripts": {
     "dev": "vite",
@@ -37,7 +36,7 @@
     "cross-env": "^10.1.0",
     "electron-builder": "^26.0.12",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.14",
+    "tailwindcss": "^3.4.18",
     "vite": "^7.1.9",
     "vite-plugin-electron": "^0.29.0",
     "vite-plugin-electron-renderer": "^0.14.6",
