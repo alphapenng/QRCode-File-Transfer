@@ -7,6 +7,16 @@ import QRCode from 'qrcode';
 import jsQR from 'jsqr';
 
 /**
+ * 二维码纠错级别常量
+ */
+export const QRErrorCorrectionLevel = {
+  L: 'L',  // 7% 纠错能力
+  M: 'M',  // 15% 纠错能力
+  Q: 'Q',  // 25% 纠错能力
+  H: 'H'   // 30% 纠错能力
+};
+
+/**
  * 生成二维码（Data URL 格式）
  * @param {string} data - 要编码的数据
  * @param {Object} options - 配置选项
@@ -201,6 +211,38 @@ export function calculateQRCodeCapacity(data, errorCorrectionLevel = 'M') {
     usagePercentage: parseFloat(usagePercentage.toFixed(2)),
     canEncode: dataLength <= maxCapacity,
     errorCorrectionLevel
+  };
+}
+
+/**
+ * 估算二维码版本
+ * @param {number} dataLength - 数据长度（字节）
+ * @param {string} errorCorrectionLevel - 纠错级别
+ * @returns {Object} 版本信息
+ */
+export function estimateQRCodeVersion(dataLength, errorCorrectionLevel = 'M') {
+  // 简化的版本估算（基于容量）
+  const capacities = {
+    'L': 2953,
+    'M': 2331,
+    'Q': 1663,
+    'H': 1273
+  };
+
+  const maxCapacity = capacities[errorCorrectionLevel] || capacities['M'];
+
+  // 估算版本（1-40）
+  let version = 1;
+  if (dataLength > 0) {
+    version = Math.min(40, Math.ceil((dataLength / maxCapacity) * 40));
+  }
+
+  return {
+    version,
+    dataLength,
+    maxCapacity,
+    errorCorrectionLevel,
+    canEncode: dataLength <= maxCapacity
   };
 }
 
