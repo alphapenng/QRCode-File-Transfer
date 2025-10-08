@@ -112,6 +112,7 @@ qrcode-app/
 - [开发规范](./docs/development-guidelines.md) - Electron、React、shadcn/ui 最佳实践
 - [技术规格说明](./docs/technical-specification.md) - 详细的技术设计文档
 - [MVP 任务列表](./docs/mvp-task-list.md) - 第一阶段开发任务
+- [安全推送指南](./docs/security-guide.md) - 安全审核和推送到 GitHub 的指南
 
 ## 🔧 开发指南
 
@@ -135,6 +136,12 @@ npm run format
 
 # 代码检查
 npm run lint
+
+# 安全审核
+npm run security-check
+
+# 安全推送到 GitHub（推荐）
+npm run push
 ```
 
 ### 关键技术点
