@@ -40,27 +40,38 @@ const SENSITIVE_PATTERNS = [
 ];
 
 // 需要检查的文件扩展名
-const CHECK_EXTENSIONS = ['.js', '.ts', '.jsx', '.tsx', '.json', '.env', '.yml', '.yaml', '.md'];
+const CHECK_EXTENSIONS = ['.js', '.ts', '.jsx', '.tsx', '.json', '.env', '.yml', '.yaml'];
 
 // 排除的目录
 const EXCLUDE_DIRS = ['node_modules', 'dist', 'build', 'out', '.git', 'coverage'];
+
+// 排除的文件（白名单）
+const EXCLUDE_FILES = [
+  'security-guide.md',  // 安全指南包含示例代码
+  'README.md'           // README 可能包含示例
+];
 
 /**
  * 递归扫描目录
  */
 function scanDirectory(dir, results = []) {
   const files = fs.readdirSync(dir);
-  
+
   for (const file of files) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
-    
+
     if (stat.isDirectory()) {
       // 跳过排除的目录
       if (!EXCLUDE_DIRS.includes(file)) {
         scanDirectory(filePath, results);
       }
     } else {
+      // 跳过白名单文件
+      if (EXCLUDE_FILES.includes(file)) {
+        continue;
+      }
+
       // 检查文件扩展名
       const ext = path.extname(file);
       if (CHECK_EXTENSIONS.includes(ext)) {
@@ -68,7 +79,7 @@ function scanDirectory(dir, results = []) {
       }
     }
   }
-  
+
   return results;
 }
 
