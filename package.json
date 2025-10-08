@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "QRCode File Transfer - 二维码文件传输工具",
   "license": "MIT",
-  "author": "Your Name <your.email@example.com>",
+  "author": "alphapenng",
   "type": "commonjs",
   "main": "src/main/index.js",
   "scripts": {
@@ -18,7 +18,10 @@
     "start": "electron .",
     "clean": "rimraf dist out",
     "lint": "echo \"Linting will be configured later\"",
-    "test": "echo \"Tests will be configured in task 1.6.1\""
+    "test": "echo \"Tests will be configured in task 1.6.1\"",
+    "security-check": "node scripts/security-check.js",
+    "push": "node scripts/security-check.js && git push origin master",
+    "push:force": "node scripts/security-check.js && git push origin master --force"
   },
   "keywords": [
     "electron",
