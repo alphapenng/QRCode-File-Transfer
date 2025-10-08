@@ -49,6 +49,7 @@ export class SenderService {
     // 回调函数
     this.onStateChange = null;
     this.onProgress = null;
+    this.onQRCode = null;
     this.onComplete = null;
     this.onError = null;
     
@@ -244,6 +245,9 @@ export class SenderService {
           current: data.index + 1,
           total: data.total
         });
+
+        // 触发二维码更新事件
+        this._emitQRCode(data.qrCode, data.index, data.total);
       });
       
       this.qrPlayer.on('complete', () => {
@@ -386,6 +390,9 @@ export class SenderService {
       case 'progress':
         this.onProgress = callback;
         break;
+      case 'qrcode':
+        this.onQRCode = callback;
+        break;
       case 'complete':
         this.onComplete = callback;
         break;
@@ -414,6 +421,20 @@ export class SenderService {
   _emitProgress(data) {
     if (this.onProgress) {
       this.onProgress(data);
+    }
+  }
+
+  /**
+   * 触发二维码更新事件
+   * @private
+   */
+  _emitQRCode(qrCode, index, total) {
+    if (this.onQRCode) {
+      this.onQRCode({
+        qrCode,
+        index,
+        total
+      });
     }
   }
   

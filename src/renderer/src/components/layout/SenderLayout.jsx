@@ -41,38 +41,44 @@ export function SenderLayout() {
     senderServiceRef.current = new SenderService();
 
     // 设置事件监听
-    senderServiceRef.current.on('stateChange', (state) => {
-      console.log('状态变化:', state);
-      setTransferState(state);
+    senderServiceRef.current.on('stateChange', (data) => {
+      console.log('状态变化:', data);
+      setTransferState(data.state);
     });
 
     senderServiceRef.current.on('progress', (progressData) => {
       console.log('进度更新:', progressData);
-      setProgress(progressData.percentage);
-      setCurrentChunk(progressData.currentChunk);
-      setTotalChunks(progressData.totalChunks);
+      if (progressData.progress !== undefined) {
+        setProgress(progressData.progress);
+      }
+      if (progressData.current !== undefined) {
+        setCurrentChunk(progressData.current);
+      }
+      if (progressData.total !== undefined) {
+        setTotalChunks(progressData.total);
+      }
     });
 
-    senderServiceRef.current.on('qrcode', (dataUrl) => {
-      console.log('二维码更新');
-      setQrcodeDataUrl(dataUrl);
+    senderServiceRef.current.on('qrcode', (data) => {
+      console.log('二维码更新:', data);
+      setQrcodeDataUrl(data.qrCode);
     });
 
-    senderServiceRef.current.on('complete', () => {
-      console.log('传输完成');
+    senderServiceRef.current.on('complete', (data) => {
+      console.log('传输完成:', data);
       setTransferState('completed');
     });
 
-    senderServiceRef.current.on('error', (error) => {
-      console.error('传输错误:', error);
+    senderServiceRef.current.on('error', (errorData) => {
+      console.error('传输错误:', errorData);
       setTransferState('error');
-      setErrorMessage(error.message || '传输过程中发生错误');
+      setErrorMessage(errorData.message || '传输过程中发生错误');
     });
 
     return () => {
       // 清理
       if (senderServiceRef.current) {
-        senderServiceRef.current.cancel();
+        senderServiceRef.current.cancelTransfer();
       }
     };
   }, []);
@@ -80,7 +86,8 @@ export function SenderLayout() {
   // 文件选择处理
   const handleSelectFile = async () => {
     try {
-      const result = await window.electronAPI.file.select({
+      // 使用 SenderService 的 selectFile 方法
+      const result = await senderServiceRef.current.selectFile({
         filters: [
           { name: '所有文件', extensions: ['*'] },
           { name: '文本文件', extensions: ['txt', 'md', 'json'] },
@@ -94,6 +101,8 @@ export function SenderLayout() {
         setSelectedFile(result.file);
         setErrorMessage('');
         console.log('文件已选择:', result.file);
+      } else if (result.error) {
+        setErrorMessage(result.message || '选择文件失败');
       }
     } catch (error) {
       console.error('选择文件失败:', error);
@@ -103,7 +112,7 @@ export function SenderLayout() {
 
   // 开始传输
   const handleStartTransfer = async () => {
-    if (!selectedFile || !canvasRef.current) {
+    if (!selectedFile) {
       setErrorMessage('请先选择文件');
       return;
     }
@@ -112,7 +121,19 @@ export function SenderLayout() {
       setTransferState('preparing');
       setErrorMessage('');
 
-      await senderServiceRef.current.send(selectedFile.path, canvasRef.current);
+      // 准备传输
+      const prepareResult = await senderServiceRef.current.prepareTransfer();
+
+      if (!prepareResult.success) {
+        throw new Error(prepareResult.message || '准备传输失败');
+      }
+
+      // 开始传输
+      const startResult = senderServiceRef.current.startTransfer();
+
+      if (!startResult.success) {
+        throw new Error(startResult.message || '开始传输失败');
+      }
     } catch (error) {
       console.error('开始传输失败:', error);
       setTransferState('error');
@@ -123,7 +144,10 @@ export function SenderLayout() {
   // 暂停传输
   const handlePauseTransfer = () => {
     try {
-      senderServiceRef.current.pause();
+      const result = senderServiceRef.current.pauseTransfer();
+      if (!result.success) {
+        throw new Error(result.message || '暂停传输失败');
+      }
     } catch (error) {
       console.error('暂停传输失败:', error);
       setErrorMessage('暂停传输失败: ' + error.message);
@@ -133,7 +157,10 @@ export function SenderLayout() {
   // 恢复传输
   const handleResumeTransfer = () => {
     try {
-      senderServiceRef.current.resume();
+      const result = senderServiceRef.current.resumeTransfer();
+      if (!result.success) {
+        throw new Error(result.message || '恢复传输失败');
+      }
     } catch (error) {
       console.error('恢复传输失败:', error);
       setErrorMessage('恢复传输失败: ' + error.message);
@@ -143,7 +170,10 @@ export function SenderLayout() {
   // 取消传输
   const handleCancelTransfer = () => {
     try {
-      senderServiceRef.current.cancel();
+      const result = senderServiceRef.current.cancelTransfer();
+      if (!result.success) {
+        throw new Error(result.message || '取消传输失败');
+      }
       setTransferState('idle');
       setProgress(0);
       setCurrentChunk(0);
