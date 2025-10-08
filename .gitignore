@@ -31,10 +31,19 @@ yarn-error.log*
 Thumbs.db
 desktop.ini
 
-# Environment
+# Environment variables (保护敏感信息)
 .env
 .env.local
 .env.*.local
+*.key
+*.pem
+*.p12
+*.pfx
+
+# 敏感配置文件
+config.local.js
+secrets.json
+credentials.json
 
 # Temporary files
 *.tmp
