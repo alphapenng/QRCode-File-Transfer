@@ -63,7 +63,7 @@ git log --oneline -10
 ### 5. 拉取最新代码
 
 ```bash
-git pull origin master
+git pull origin main
 ```
 
 ---
@@ -163,9 +163,9 @@ git commit -m "docs: 更新 README"
 
 **仓库地址**: https://github.com/alphapenng/QRCode-File-Transfer
 
-**查看代码**: https://github.com/alphapenng/QRCode-File-Transfer/tree/master
+**查看代码**: https://github.com/alphapenng/QRCode-File-Transfer/tree/main
 
-**提交历史**: https://github.com/alphapenng/QRCode-File-Transfer/commits/master
+**提交历史**: https://github.com/alphapenng/QRCode-File-Transfer/commits/main
 
 ---
 
@@ -196,7 +196,7 @@ git commit -m "docs: 更新 README"
 3. **冲突**
    ```bash
    # 先拉取最新代码
-   git pull origin master
+   git pull origin main
    # 解决冲突后再推送
    npm run push
    ```

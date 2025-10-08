@@ -79,8 +79,8 @@ credentials.json
 {
   "scripts": {
     "security-check": "node scripts/security-check.js",
-    "push": "node scripts/security-check.js && git push origin master",
-    "push:force": "node scripts/security-check.js && git push origin master --force"
+    "push": "node scripts/security-check.js && git push origin main",
+    "push:force": "node scripts/security-check.js && git push origin main --force"
   }
 }
 ```
@@ -250,8 +250,8 @@ git commit -m "chore: 添加安全审核和推送脚本"
 ## 🔗 相关链接
 
 - **GitHub 仓库**: https://github.com/alphapenng/QRCode-File-Transfer
-- **代码浏览**: https://github.com/alphapenng/QRCode-File-Transfer/tree/master
-- **提交历史**: https://github.com/alphapenng/QRCode-File-Transfer/commits/master
+- **代码浏览**: https://github.com/alphapenng/QRCode-File-Transfer/tree/main
+- **提交历史**: https://github.com/alphapenng/QRCode-File-Transfer/commits/main
 
 ---
 

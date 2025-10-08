@@ -36,7 +36,7 @@ echo.
 
 REM 3. 推送到 GitHub
 echo 📋 步骤 3/3: 推送到 GitHub
-git push origin master
+git push origin main
 
 if %errorlevel% equ 0 (
   echo.

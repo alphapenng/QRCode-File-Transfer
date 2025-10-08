@@ -37,7 +37,7 @@ echo ""
 
 # 3. 推送到 GitHub
 echo "📋 步骤 3/3: 推送到 GitHub"
-git push origin master
+git push origin main
 
 if [ $? -eq 0 ]; then
   echo ""

@@ -20,8 +20,8 @@
     "lint": "echo \"Linting will be configured later\"",
     "test": "echo \"Tests will be configured in task 1.6.1\"",
     "security-check": "node scripts/security-check.js",
-    "push": "node scripts/security-check.js && git push origin master",
-    "push:force": "node scripts/security-check.js && git push origin master --force"
+    "push": "node scripts/security-check.js && git push origin main",
+    "push:force": "node scripts/security-check.js && git push origin main --force"
   },
   "keywords": [
     "electron",
