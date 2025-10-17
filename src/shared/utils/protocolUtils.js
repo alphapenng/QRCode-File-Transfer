@@ -37,9 +37,9 @@ export function createFileHeader(fileInfo, totalChunks) {
     type: ChunkType.FILE_HEADER,
     timestamp: Date.now(),
     fileInfo: {
-      fileName: fileInfo.fileName,
-      fileSize: fileInfo.fileSize,
-      fileType: fileInfo.fileType,
+      fileName: fileInfo.name,
+      fileSize: fileInfo.size,
+      fileType: fileInfo.type,
       sha256: fileInfo.sha256
     },
     totalChunks,

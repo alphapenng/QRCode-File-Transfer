@@ -81,10 +81,10 @@ export function compressFileData(data, options = {}) {
       
       return {
         success: true,
-        data: result.compressed,
+        data: result.data,
         originalSize: result.originalSize,
         compressedSize: result.compressedSize,
-        compressionRatio: result.compressionRatio,
+        compressionRatio: result.ratio,
         compressionTime: result.compressionTime,
         stats: result
       };

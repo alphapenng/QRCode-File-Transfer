@@ -1,3 +1,12 @@
+/*
+ * @Description: 
+ * @Author: alphapenng
+ * @Github: 
+ * @Date: 2025-10-08 17:52:55
+ * @LastEditors: alphapenng
+ * @LastEditTime: 2025-10-17 16:10:13
+ * @FilePath: \qrcode-app\src\renderer\src\components\layout\MainLayout.jsx
+ */
 /**
  * 主布局组件
  * 提供应用的整体布局结构
@@ -31,7 +40,7 @@ export function MainLayout({ children }) {
                   <rect x="3" y="14" width="7" height="7" />
                 </svg>
               </div>
-              <h1 className="text-xl font-bold">二维码文件传输</h1>
+              <h1 className="text-xl font-bold">码上传报</h1>
             </div>
             <div className="text-sm text-muted-foreground">
               v1.0.0
@@ -49,7 +58,7 @@ export function MainLayout({ children }) {
       <footer className="border-t mt-auto">
         <div className="container mx-auto px-4 py-4">
           <p className="text-center text-sm text-muted-foreground">
-            © 2025 QRCode File Transfer. All rights reserved.
+            © 2025 东海通
           </p>
         </div>
       </footer>

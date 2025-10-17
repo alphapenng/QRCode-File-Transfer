@@ -60,7 +60,7 @@ export function createFileTransferPackage(fileInfo, fileData, options = {}) {
       success: true,
       package: transferPackage,
       stats: {
-        totalChunks: transferPackage.chunks.length,
+        totalChunks: transferPackage[0].totalChunks,
         chunkSize,
         fileSize: fileData.length,
         creationTime: (endTime - startTime).toFixed(2)
@@ -249,7 +249,8 @@ export class ChunkManager {
         fileData,
         this.options
       );
-      
+      console.log('传输包创建成功！', packageResult);
+
       if (!packageResult.success) {
         return {
           success: false,
@@ -257,15 +258,16 @@ export class ChunkManager {
           message: packageResult.message
         };
       }
-      
+
+      // transferPackage 是一个数组：[header, ...dataChunks, footer]
       this.transferPackage = packageResult.package;
-      
-      // 编码分片
+
+      // 编码所有分片（包括 header、data chunks、footer）
       const encodeResult = encodeChunks(
-        this.transferPackage.chunks,
+        this.transferPackage,  // 直接传递整个数组
         { validate: this.options.validate }
       );
-      
+
       if (!encodeResult.success) {
         return {
           success: false,
@@ -273,7 +275,7 @@ export class ChunkManager {
           message: `编码失败: ${encodeResult.errors.length} 个分片`
         };
       }
-      
+
       this.encodedChunks = encodeResult.encodedChunks;
       this.currentIndex = 0;
       this.stats = {
@@ -281,7 +283,7 @@ export class ChunkManager {
         sentChunks: 0,
         failedChunks: 0
       };
-      
+
       return {
         success: true,
         totalChunks: this.stats.totalChunks,
