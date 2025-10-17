@@ -20,14 +20,17 @@ import { splitIntoChunks } from '@shared/utils/fileUtils.js';
  */
 export const CHUNK_OPTIONS = {
   // 分片大小（字节）
-  chunkSize: 2048,
-  
+  // 注意：考虑到 JSON 编码开销和二维码容量限制
+  // 实际数据 -> 压缩 -> Base64(+33%) -> JSON包装(+200 bytes) -> 需要 < 2953 bytes (QR L级)
+  // 建议：1024 bytes 原始数据 -> 约 1400 bytes JSON
+  chunkSize: 1024,
+
   // 是否压缩分片
   compress: true,
-  
+
   // 是否编码为 JSON
   encode: true,
-  
+
   // 是否验证分片
   validate: true
 };
@@ -249,7 +252,6 @@ export class ChunkManager {
         fileData,
         this.options
       );
-      console.log('传输包创建成功！', packageResult);
 
       if (!packageResult.success) {
         return {
@@ -276,6 +278,7 @@ export class ChunkManager {
         };
       }
 
+      console.log('encodeResult:', encodeResult);
       this.encodedChunks = encodeResult.encodedChunks;
       this.currentIndex = 0;
       this.stats = {

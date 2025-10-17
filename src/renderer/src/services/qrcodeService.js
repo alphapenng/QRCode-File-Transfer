@@ -17,15 +17,20 @@ import {
  */
 export const QRCODE_OPTIONS = {
   // 纠错级别
-  errorCorrectionLevel: 'M',  // L(7%), M(15%), Q(25%), H(30%)
-  
+  // L(7%): 最大容量约 2953 bytes
+  // M(15%): 最大容量约 2331 bytes
+  // Q(25%): 最大容量约 1663 bytes
+  // H(30%): 最大容量约 1273 bytes
+  // 使用 L 级以获得最大容量
+  errorCorrectionLevel: 'L',
+
   // 二维码大小（像素）
   width: 400,
   height: 400,
-  
+
   // 边距
   margin: 2,
-  
+
   // 颜色
   color: {
     dark: '#000000',

@@ -43,7 +43,7 @@ export function createFileHeader(fileInfo, totalChunks) {
       sha256: fileInfo.sha256
     },
     totalChunks,
-    chunkSize: 2048 // 默认分片大小
+    chunkSize: 1024 // 默认分片大小（减小以适应二维码容量）
   };
 
   return header;
@@ -258,12 +258,12 @@ export function extractChunkData(chunk) {
  * @param {Uint8Array} fileData - 文件数据
  * @param {Object} fileInfo - 文件信息
  * @param {Object} options - 配置选项
- * @param {number} options.chunkSize - 分片大小，默认 2048
+ * @param {number} options.chunkSize - 分片大小，默认 1024（减小以适应二维码容量）
  * @param {boolean} options.compress - 是否压缩，默认 true
  * @returns {Object[]} 传输包数组
  */
 export function createTransferPackage(fileData, fileInfo, options = {}) {
-  const { chunkSize = 2048, compress: shouldCompress = true } = options;
+  const { chunkSize = 1024, compress: shouldCompress = true } = options;
 
   const packages = [];
 

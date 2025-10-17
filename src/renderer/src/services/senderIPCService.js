@@ -32,9 +32,9 @@ export class SenderService {
   constructor(options = {}) {
     this.options = {
       maxFileSize: 1048576,  // 1MB
-      chunkSize: 2048,
+      chunkSize: 1024,  // 减小到 1024 以适应二维码容量限制
       qrCodeSpeed: 5,
-      qrCodeErrorCorrectionLevel: 'M',
+      qrCodeErrorCorrectionLevel: 'L',  // 使用 L 级以获得最大容量
       ...options
     };
     
@@ -200,14 +200,23 @@ export class SenderService {
       
       while (!this.chunkManager.isCompleted()) {
         const chunkResult = this.chunkManager.getNextChunk();
-        
+
         if (chunkResult.success) {
+          // 检查数据大小
+          const dataSize = chunkResult.chunk.length;
+          console.log(`分片 ${generatedCount + 1}/${this.stats.totalChunks} 大小: ${dataSize} bytes`);
+
+          // 警告：如果数据太大
+          if (dataSize > 2900) {
+            console.warn(`⚠️ 分片数据过大 (${dataSize} bytes)，可能超过二维码容量限制 (2953 bytes)`);
+          }
+
           const qrResult = await this.qrGenerator.generate(chunkResult.chunk);
-          
+
           if (qrResult.success) {
             this.qrCodes.push(qrResult.dataURL);
             generatedCount++;
-            
+
             const progress = 50 + (generatedCount / this.stats.totalChunks) * 25;
             this._emitProgress({
               stage: 'generate',
@@ -216,6 +225,10 @@ export class SenderService {
               current: generatedCount,
               total: this.stats.totalChunks
             });
+          } else {
+            // 二维码生成失败
+            console.error(`二维码生成失败 (分片 ${generatedCount + 1}):`, qrResult);
+            throw new Error(`二维码生成失败: ${qrResult.message}`);
           }
         }
       }
