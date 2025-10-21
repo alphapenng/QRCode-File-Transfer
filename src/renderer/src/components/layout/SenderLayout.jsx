@@ -20,12 +20,12 @@ import {
   AlertTitle,
   AlertDescription
 } from '../ui';
-import { SenderService } from '../../services/senderIPCService';
+import { SenderService, TransferState } from '../../services/senderIPCService';
 
 export function SenderLayout() {
   // 状态管理
   const [selectedFile, setSelectedFile] = React.useState(null);
-  const [transferState, setTransferState] = React.useState('idle'); // idle, preparing, sending, paused, completed, error
+  const [transferState, setTransferState] = React.useState(TransferState.IDLE);
   const [progress, setProgress] = React.useState(0);
   const [currentChunk, setCurrentChunk] = React.useState(0);
   const [totalChunks, setTotalChunks] = React.useState(0);
@@ -66,12 +66,12 @@ export function SenderLayout() {
 
     senderServiceRef.current.on('complete', (data) => {
       console.log('传输完成:', data);
-      setTransferState('completed');
+      // 状态由服务自动设置为 COMPLETED
     });
 
     senderServiceRef.current.on('error', (errorData) => {
       console.error('传输错误:', errorData);
-      setTransferState('error');
+      // 状态由服务自动设置为 ERROR
       setErrorMessage(errorData.message || '传输过程中发生错误');
     });
 
@@ -136,7 +136,7 @@ export function SenderLayout() {
       }
     } catch (error) {
       console.error('开始传输失败:', error);
-      setTransferState('error');
+      // 状态由服务自动设置为 ERROR
       setErrorMessage('开始传输失败: ' + error.message);
     }
   };
@@ -174,7 +174,7 @@ export function SenderLayout() {
       if (!result.success) {
         throw new Error(result.message || '取消传输失败');
       }
-      setTransferState('idle');
+      // 状态由服务自动设置为 CANCELLED
       setProgress(0);
       setCurrentChunk(0);
       setTotalChunks(0);
@@ -186,9 +186,9 @@ export function SenderLayout() {
     }
   };
 
-  // 重置（传输完成后）
+  // 重置（传输完成后或取消后）
   const handleReset = () => {
-    setTransferState('idle');
+    setTransferState(TransferState.IDLE);
     setSelectedFile(null);
     setProgress(0);
     setCurrentChunk(0);
@@ -211,7 +211,14 @@ export function SenderLayout() {
             <Button
               onClick={handleSelectFile}
               className="w-full"
-              disabled={transferState === 'sending' || transferState === 'preparing'}
+              disabled={
+                transferState === TransferState.SELECTING ||
+                transferState === TransferState.PREPROCESSING ||
+                transferState === TransferState.CHUNKING ||
+                transferState === TransferState.GENERATING ||
+                transferState === TransferState.PLAYING ||
+                transferState === TransferState.PAUSED
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -254,26 +261,29 @@ export function SenderLayout() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>传输控制</CardTitle>
-              {transferState !== 'idle' && (
+              {transferState !== TransferState.IDLE && (
                 <Badge variant={
-                  transferState === 'sending' ? 'default' :
-                  transferState === 'paused' ? 'secondary' :
-                  transferState === 'completed' ? 'default' :
-                  transferState === 'preparing' ? 'secondary' :
+                  transferState === TransferState.PLAYING ? 'default' :
+                  transferState === TransferState.PAUSED ? 'secondary' :
+                  transferState === TransferState.COMPLETED ? 'default' :
+                  transferState === TransferState.SELECTING ||
+                  transferState === TransferState.PREPROCESSING ||
+                  transferState === TransferState.CHUNKING ||
+                  transferState === TransferState.GENERATING ? 'secondary' :
                   'destructive'
                 }>
-                  {transferState === 'sending' ? '发送中' :
-                   transferState === 'paused' ? '已暂停' :
-                   transferState === 'completed' ? '已完成' :
-                   transferState === 'preparing' ? '准备中' :
-                   '错误'}
+                  {transferState}
                 </Badge>
               )}
             </div>
             <CardDescription>控制文件传输过程</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {(transferState === 'preparing' || transferState === 'sending' || transferState === 'paused') && (
+            {(transferState === TransferState.PREPROCESSING ||
+              transferState === TransferState.CHUNKING ||
+              transferState === TransferState.GENERATING ||
+              transferState === TransferState.PLAYING ||
+              transferState === TransferState.PAUSED) && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>传输进度</span>
@@ -296,7 +306,7 @@ export function SenderLayout() {
             )}
 
             <div className="flex gap-2">
-              {transferState === 'idle' && (
+              {transferState === TransferState.IDLE && (
                 <Button
                   onClick={handleStartTransfer}
                   disabled={!selectedFile}
@@ -318,7 +328,10 @@ export function SenderLayout() {
                 </Button>
               )}
 
-              {transferState === 'preparing' && (
+              {(transferState === TransferState.SELECTING ||
+                transferState === TransferState.PREPROCESSING ||
+                transferState === TransferState.CHUNKING ||
+                transferState === TransferState.GENERATING) && (
                 <Button disabled className="flex-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -332,11 +345,11 @@ export function SenderLayout() {
                   >
                     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                   </svg>
-                  准备中...
+                  {transferState}...
                 </Button>
               )}
 
-              {transferState === 'sending' && (
+              {transferState === TransferState.PLAYING && (
                 <>
                   <Button
                     onClick={handlePauseTransfer}
@@ -381,7 +394,7 @@ export function SenderLayout() {
                 </>
               )}
 
-              {transferState === 'paused' && (
+              {transferState === TransferState.PAUSED && (
                 <>
                   <Button
                     onClick={handleResumeTransfer}
@@ -424,7 +437,8 @@ export function SenderLayout() {
                 </>
               )}
 
-              {transferState === 'completed' && (
+              {(transferState === TransferState.COMPLETED ||
+                transferState === TransferState.CANCELLED) && (
                 <Button
                   onClick={handleReset}
                   className="flex-1"
@@ -447,7 +461,7 @@ export function SenderLayout() {
                 </Button>
               )}
 
-              {transferState === 'error' && (
+              {transferState === TransferState.ERROR && (
                 <Button
                   onClick={handleReset}
                   variant="outline"
@@ -482,11 +496,15 @@ export function SenderLayout() {
           <CardHeader>
             <CardTitle>二维码显示</CardTitle>
             <CardDescription>
-              {transferState === 'idle' ? '选择文件后开始传输' :
-               transferState === 'preparing' ? '正在准备文件...' :
-               transferState === 'sending' ? '请使用接收端扫描二维码' :
-               transferState === 'paused' ? '传输已暂停' :
-               transferState === 'completed' ? '传输完成' :
+              {transferState === TransferState.IDLE ? '选择文件后开始传输' :
+               transferState === TransferState.SELECTING ? '正在选择文件...' :
+               transferState === TransferState.PREPROCESSING ? '正在预处理文件...' :
+               transferState === TransferState.CHUNKING ? '正在分片...' :
+               transferState === TransferState.GENERATING ? '正在生成二维码...' :
+               transferState === TransferState.PLAYING ? '请使用接收端扫描二维码' :
+               transferState === TransferState.PAUSED ? '传输已暂停' :
+               transferState === TransferState.COMPLETED ? '传输完成' :
+               transferState === TransferState.CANCELLED ? '传输已取消' :
                '发生错误'}
             </CardDescription>
           </CardHeader>
@@ -495,7 +513,7 @@ export function SenderLayout() {
             <canvas ref={canvasRef} style={{ display: 'none' }} />
 
             <div className="aspect-square bg-muted rounded-lg flex items-center justify-center overflow-hidden">
-              {transferState === 'idle' ? (
+              {transferState === TransferState.IDLE ? (
                 <div className="text-center text-muted-foreground">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -514,7 +532,10 @@ export function SenderLayout() {
                   </svg>
                   <p>二维码将在此显示</p>
                 </div>
-              ) : transferState === 'preparing' ? (
+              ) : (transferState === TransferState.SELECTING ||
+                     transferState === TransferState.PREPROCESSING ||
+                     transferState === TransferState.CHUNKING ||
+                     transferState === TransferState.GENERATING) ? (
                 <div className="text-center text-muted-foreground">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -528,9 +549,10 @@ export function SenderLayout() {
                   >
                     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                   </svg>
-                  <p>正在准备文件...</p>
+                  <p>{transferState}...</p>
                 </div>
-              ) : transferState === 'sending' || transferState === 'paused' ? (
+              ) : (transferState === TransferState.PLAYING ||
+                     transferState === TransferState.PAUSED) ? (
                 <div className="text-center w-full">
                   {qrcodeDataUrl ? (
                     <div className="relative">
@@ -539,7 +561,7 @@ export function SenderLayout() {
                         alt="QR Code"
                         className="w-full h-auto max-w-md mx-auto"
                       />
-                      {transferState === 'paused' && (
+                      {transferState === TransferState.PAUSED && (
                         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                           <div className="text-white text-lg font-semibold">已暂停</div>
                         </div>
@@ -556,7 +578,7 @@ export function SenderLayout() {
                     </p>
                   )}
                 </div>
-              ) : transferState === 'completed' ? (
+              ) : transferState === TransferState.COMPLETED ? (
                 <div className="text-center text-green-600">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -575,6 +597,24 @@ export function SenderLayout() {
                   <p className="text-sm text-muted-foreground mt-2">
                     已发送 {totalChunks} 个分片
                   </p>
+                </div>
+              ) : transferState === TransferState.CANCELLED ? (
+                <div className="text-center text-muted-foreground">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-16 h-16 mx-auto mb-4"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                  </svg>
+                  <p className="font-semibold">传输已取消</p>
                 </div>
               ) : (
                 <div className="text-center text-destructive">
@@ -600,18 +640,18 @@ export function SenderLayout() {
               )}
             </div>
           </CardContent>
-          {transferState === 'sending' && (
+          {transferState === TransferState.PLAYING && (
             <CardFooter>
               <div className="w-full space-y-1">
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>传输速度</span>
-                  <span>10 帧/秒</span>
+                  <span>5 帧/秒</span>
                 </div>
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>预计剩余时间</span>
                   <span>
                     {totalChunks > 0 && currentChunk > 0
-                      ? `${Math.ceil((totalChunks - currentChunk) / 10)} 秒`
+                      ? `${Math.ceil((totalChunks - currentChunk) / 5)} 秒`
                       : '--'}
                   </span>
                 </div>

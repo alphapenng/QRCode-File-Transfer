@@ -13,16 +13,16 @@ import { QRCodePlayer } from './qrcodePlayerService.js';
  * 传输状态
  */
 export const TransferState = {
-  IDLE: 'idle',
-  SELECTING: 'selecting',
-  PREPROCESSING: 'preprocessing',
-  CHUNKING: 'chunking',
-  GENERATING: 'generating',
-  PLAYING: 'playing',
-  PAUSED: 'paused',
-  COMPLETED: 'completed',
-  ERROR: 'error',
-  CANCELLED: 'cancelled'
+  IDLE: '空闲',
+  SELECTING: '选择文件中',
+  PREPROCESSING: '预处理中',
+  CHUNKING: '分片中',
+  GENERATING: '生成二维码中',
+  PLAYING: '播放中',
+  PAUSED: '暂停',
+  COMPLETED: '传输完成',
+  ERROR: '传输错误',
+  CANCELLED: '传输取消'
 };
 
 /**
